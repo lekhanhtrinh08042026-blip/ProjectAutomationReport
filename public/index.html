@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#152b4e" />
+  <meta name="description" content="CNC Service Report Template Studio - Điền báo cáo trực tiếp trên tệp Excel mẫu gốc." />
+  <title>Automation Report | Excel Template Studio</title>
+  <link rel="stylesheet" href="./app.css" />
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="./"><span class="brand-icon">AR</span><span><b>AUTOMATION</b><small>REPORT STUDIO</small></span></a>
+      <p class="overline">WORKSPACE</p>
+      <nav class="nav">
+        <button type="button" data-tab="editor" class="nav-item active"><span>▣</span> Tạo báo cáo</button>
+        <button type="button" data-tab="library" class="nav-item"><span>▤</span> Kho file mẫu</button>
+        <button type="button" data-tab="guide" class="nav-item"><span>◎</span> Hướng dẫn</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <span class="online-dot"></span> Lưu mẫu trong trình duyệt
+        <p>Dữ liệu không tự động tải lên GitHub. Không cần đăng nhập để dùng bản thử nghiệm.</p>
+      </div>
+    </aside>
+    <main class="workspace">
+      <header class="topbar"><div class="crumb">CNC Service <span>/</span> <strong id="currentPage">Tạo báo cáo</strong></div><div class="top-actions"><span class="chip">BETA • V5</span><a class="github-link" href="https://github.com/lekhanhtrinh08042026-blip/ProjectAutomationReport" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></header>
+      <section class="content">
+        <div class="headline"><div><div class="eyebrow">FIELD SERVICE WORKSPACE</div><h1 id="pageTitle">Tạo báo cáo từ file Excel gốc</h1><p id="pageDescription">Chọn nhóm thiết bị, model và option; nhập kết quả vào ô đã cấu hình, sau đó xuất file .xlsx giữ bố cục của mẫu.</p></div><button id="openUpload" class="button primary" type="button">＋ Thêm file mẫu</button></div>
+        <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+        <div id="contentRoot"></div>
+      </section>
+    </main>
+  </div>
+  <dialog id="uploadDialog" class="modal">
+    <form id="uploadForm">
+      <div class="modal-header"><div><p class="eyebrow">TEMPLATE MANAGER</p><h2>Đăng ký file Excel mẫu</h2><p>Chỉ hỗ trợ .xlsx. File được lưu trong bộ nhớ trình duyệt hiện tại.</p></div><button class="icon-button" type="button" data-close-dialog aria-label="Đóng">×</button></div>
+      <div class="modal-body">
+        <label>Nhánh / nhóm thiết bị <input id="uploadBranch" type="text" list="branchesList" placeholder="Spindle, Ball screw, ATC..." required /></label>
+        <datalist id="branchesList"></datalist>
+        <label>Model máy <input id="uploadModel" type="text" placeholder="VD: Makino a51nx; hoặc ALL" required /></label>
+        <label>Tên option <input id="uploadOption" type="text" placeholder="VD: Spindle - File 1" required /></label>
+        <label>File Excel gốc <input id="uploadFile" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required /></label>
+        <div class="tip">Không tải lên file nội bộ có dữ liệu nhạy cảm trong repository công khai. Mẫu Excel chỉ được lưu cục bộ ở trình duyệt.</div>
+      </div>
+      <div class="modal-footer"><button class="button secondary" type="button" data-close-dialog>Hủy</button><button id="saveTemplateButton" class="button primary" type="submit">Lưu file mẫu</button></div>
+    </form>
+  </dialog>
+</body>
+</html>

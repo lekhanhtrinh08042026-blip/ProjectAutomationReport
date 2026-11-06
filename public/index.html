@@ -1,52 +1,102 @@
 <!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#152b4e" />
-  <meta name="description" content="CNC Service Report Template Studio - Điền báo cáo trực tiếp trên tệp Excel mẫu gốc." />
-  <title>Automation Report | Excel Template Studio</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#112847" />
+  <meta name="description" content="Automation Report — Tạo báo cáo kỹ thuật CNC nhanh từ mẫu Excel chuẩn." />
+  <title>Automation Report — Field Service Workspace</title>
   <link rel="stylesheet" href="./app.css" />
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js" defer></script>
-  <script src="./app.js" defer></script>
+  <script defer src="./firebase-config.js"></script>
+  <script defer src="./app.js"></script>
 </head>
 <body>
-  <div class="shell">
-    <aside class="sidebar">
-      <a class="brand" href="./"><span class="brand-icon">AR</span><span><b>AUTOMATION</b><small>REPORT STUDIO</small></span></a>
-      <p class="overline">WORKSPACE</p>
-      <nav class="nav">
-        <button type="button" data-tab="editor" class="nav-item active"><span>▣</span> Tạo báo cáo</button>
-        <button type="button" data-tab="library" class="nav-item"><span>▤</span> Kho file mẫu</button>
-        <button type="button" data-tab="guide" class="nav-item"><span>◎</span> Hướng dẫn</button>
-      </nav>
-      <div class="sidebar-bottom">
-        <span class="online-dot"></span> Lưu mẫu trong trình duyệt
-        <p>Dữ liệu không tự động tải lên GitHub. Không cần đăng nhập để dùng bản thử nghiệm.</p>
+  <section id="loginScreen" class="login-layout" aria-labelledby="loginHeading">
+    <div class="login-intro">
+      <div class="brand brand-light"><span class="brand-mark">A<span>R</span></span><span><strong>AUTOMATION</strong><small>REPORT STUDIO</small></span></div>
+      <div class="intro-content">
+        <span class="eyebrow eyebrow-light"><span class="eyebrow-line"></span> FIELD SERVICE WORKSPACE</span>
+        <h1>Báo cáo kỹ thuật.<br /><em>Đơn giản hơn.</em></h1>
+        <p>Tạo báo cáo kiểm tra và bảo trì máy CNC từ bộ mẫu Excel đã chuẩn hóa — nhanh, rõ ràng và nhất quán.</p>
+        <div class="intro-features">
+          <div><span class="feature-icon">✓</span> Mẫu AMC / Troubleshoot / PLANT</div>
+          <div><span class="feature-icon">✓</span> Quản lý theo Unit, Model và Option</div>
+          <div><span class="feature-icon">✓</span> Hướng đến xuất đúng định dạng Excel gốc</div>
+        </div>
       </div>
-    </aside>
-    <main class="workspace">
-      <header class="topbar"><div class="crumb">CNC Service <span>/</span> <strong id="currentPage">Tạo báo cáo</strong></div><div class="top-actions"><span class="chip">BETA • V5</span><a class="github-link" href="https://github.com/lekhanhtrinh08042026-blip/ProjectAutomationReport" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></header>
-      <section class="content">
-        <div class="headline"><div><div class="eyebrow">FIELD SERVICE WORKSPACE</div><h1 id="pageTitle">Tạo báo cáo từ file Excel gốc</h1><p id="pageDescription">Chọn nhóm thiết bị, model và option; nhập kết quả vào ô đã cấu hình, sau đó xuất file .xlsx giữ bố cục của mẫu.</p></div><button id="openUpload" class="button primary" type="button">＋ Thêm file mẫu</button></div>
-        <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
-        <div id="contentRoot"></div>
+      <div class="intro-foot">AUTOMATION REPORT <span>•</span> SERVICE ENGINEER WORKSPACE</div>
+      <div class="intro-decoration" aria-hidden="true"><div class="ring ring-one"></div><div class="ring ring-two"></div><div class="ring ring-three"></div></div>
+    </div>
+    <div class="login-panel">
+      <div class="login-card">
+        <div class="login-icon" aria-hidden="true">
+          <svg width="27" height="27" viewBox="0 0 24 24" fill="none"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v13a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 18.5v-13Z" stroke="currentColor" stroke-width="1.6"/><path d="M8 8h8M8 12h8M8 16h5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        </div>
+        <span class="eyebrow">BẮT ĐẦU LÀM VIỆC</span>
+        <h2 id="loginHeading">Chào mừng trở lại</h2>
+        <p>Đăng nhập bằng tài khoản Google để truy cập không gian báo cáo của kỹ sư.</p>
+        <button id="googleLogin" class="google-button" type="button">
+          <svg class="google-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.55 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.75 9.5 24 9.5Z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.28 5.48-4.8 7.18l7.73 6C44.38 38.04 46.98 31.96 46.98 24.55Z"/><path fill="#FBBC05" d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.77-4.59l-7.98-6.2A23.9 23.9 0 0 0 0 24c0 3.87.93 7.53 2.56 10.78l7.97-6.19Z"/><path fill="#34A853" d="M24 48c6.48 0 11.92-2.13 15.9-5.8l-7.73-6c-2.14 1.44-4.88 2.3-8.17 2.3-6.25 0-11.56-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48Z"/></svg>
+          <span>Tiếp tục với Google</span>
+          <span class="button-arrow" aria-hidden="true">↗</span>
+        </button>
+        <p id="loginStatus" class="inline-status" role="status" aria-live="polite"></p>
+        <div class="demo-separator"><span>HOẶC</span></div>
+        <button id="demoLogin" class="demo-button" type="button">Xem thử giao diện (không đăng nhập) <span>→</span></button>
+        <div class="privacy-note"><span>◈</span> Đăng nhập thật cần cấu hình Google Firebase Authentication; bản xem thử không xác thực danh tính.</div>
+      </div>
+      <div class="login-panel-foot">© 2026 Automation Report <span> • </span> Giao diện phiên bản đầu tiên</div>
+    </div>
+  </section>
+
+  <section id="dashboardScreen" class="dashboard-screen" hidden aria-labelledby="dashboardTitle">
+    <header class="app-header">
+      <div class="brand brand-dark"><span class="brand-mark">A<span>R</span></span><span><strong>AUTOMATION</strong><small>REPORT STUDIO</small></span></div>
+      <div class="header-right">
+        <span id="demoBadge" class="demo-badge" hidden>CHẾ ĐỘ XEM TRƯỚC</span>
+        <div class="user-profile"><span id="avatar" class="avatar" aria-hidden="true">E</span><div><strong id="userName">Engineer</strong><small id="userEmail">—</small></div></div>
+        <button id="logoutButton" class="logout-button" type="button" title="Đăng xuất / Thoát xem thử">Đăng xuất</button>
+      </div>
+    </header>
+    <main class="dashboard-main">
+      <div class="dashboard-eyebrow">FIELD SERVICE WORKSPACE <span> / </span> TỔNG QUAN</div>
+      <section class="greeting">
+        <p id="greetingSmall">Xin chào, Engineer 👋</p>
+        <h1 id="dashboardTitle">Hôm nay bạn muốn làm gì?</h1>
+        <span>Bắt đầu báo cáo mới hoặc tiếp tục công việc đang thực hiện.</span>
+      </section>
+      <section class="create-wrap" aria-label="Tạo báo cáo">
+        <button id="createReport" class="create-tile" type="button">
+          <span class="plus-outer"><span class="plus-inner" aria-hidden="true">＋</span></span>
+          <strong>Tạo báo cáo</strong>
+          <span>Tạo báo cáo kiểm tra, bảo trì hoặc xử lý sự cố máy CNC</span>
+          <span class="create-link">BẮT ĐẦU BÁO CÁO <span aria-hidden="true">↗</span></span>
+        </button>
+      </section>
+      <section class="recent">
+        <div class="recent-head"><div><h2>Báo cáo gần đây</h2><p>Bản nháp lưu trên trình duyệt này (chưa đồng bộ đám mây)</p></div></div>
+        <div id="recentReports" class="recent-content"><div class="empty-recent">Chưa có báo cáo nào. Nhấn “Tạo báo cáo” để bắt đầu.</div></div>
       </section>
     </main>
-  </div>
-  <dialog id="uploadDialog" class="modal">
-    <form id="uploadForm">
-      <div class="modal-header"><div><p class="eyebrow">TEMPLATE MANAGER</p><h2>Đăng ký file Excel mẫu</h2><p>Chỉ hỗ trợ .xlsx. File được lưu trong bộ nhớ trình duyệt hiện tại.</p></div><button class="icon-button" type="button" data-close-dialog aria-label="Đóng">×</button></div>
-      <div class="modal-body">
-        <label>Nhánh / nhóm thiết bị <input id="uploadBranch" type="text" list="branchesList" placeholder="Spindle, Ball screw, ATC..." required /></label>
-        <datalist id="branchesList"></datalist>
-        <label>Model máy <input id="uploadModel" type="text" placeholder="VD: Makino a51nx; hoặc ALL" required /></label>
-        <label>Tên option <input id="uploadOption" type="text" placeholder="VD: Spindle - File 1" required /></label>
-        <label>File Excel gốc <input id="uploadFile" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" required /></label>
-        <div class="tip">Không tải lên file nội bộ có dữ liệu nhạy cảm trong repository công khai. Mẫu Excel chỉ được lưu cục bộ ở trình duyệt.</div>
+    <footer class="dashboard-footer">Automation Report · Giao diện V1 · Tập trung vào quy trình kỹ sư</footer>
+  </section>
+
+  <dialog id="newReportDialog" class="report-dialog" aria-labelledby="dialogTitle">
+    <form id="newReportForm">
+      <div class="dialog-head"><div><span class="eyebrow">NEW SERVICE REPORT</span><h2 id="dialogTitle">Tạo báo cáo mới</h2><p>Nhập thông tin cơ bản. Chọn Unit và file mẫu Excel sẽ được triển khai ở bước tiếp theo.</p></div><button type="button" class="close-button" id="closeDialog" aria-label="Đóng">×</button></div>
+      <div class="dialog-body">
+        <label class="input-field"><span>Loại báo cáo <b>*</b></span><select id="reportType" required><option value="AMC">AMC – Annual Maintenance</option><option value="Troubleshoot">Troubleshoot</option><option value="PLANT">PLANT</option><option value="Installation">Installation</option><option value="Inspection">Inspection</option></select></label>
+        <label class="input-field"><span>Customer <b>*</b></span><input id="reportCustomer" type="text" maxlength="120" placeholder="Tên khách hàng / nhà máy" required /></label>
+        <div class="form-grid">
+          <label class="input-field"><span>Model <b>*</b></span><input id="reportModel" type="text" maxlength="80" placeholder="VD: Makino a51nx" required /></label>
+          <label class="input-field"><span>Serial No.</span><input id="reportSerial" type="text" maxlength="80" placeholder="Số serial máy" /></label>
+          <label class="input-field"><span>Date of Inspection</span><input id="reportDate" type="date" required /></label>
+          <label class="input-field"><span>Checked By</span><input id="reportEngineer" type="text" maxlength="80" placeholder="Tên kỹ sư" /></label>
+        </div>
       </div>
-      <div class="modal-footer"><button class="button secondary" type="button" data-close-dialog>Hủy</button><button id="saveTemplateButton" class="button primary" type="submit">Lưu file mẫu</button></div>
+      <div class="dialog-foot"><button class="cancel-button" id="cancelDialog" type="button">Hủy</button><button class="submit-button" type="submit">Tạo bản nháp <span>→</span></button></div>
     </form>
   </dialog>
+  <p id="toast" class="toast" role="status" aria-live="polite" hidden></p>
 </body>
 </html>
